@@ -220,3 +220,35 @@ class Test_Rail:
                 print('Updated test result for case: %s in test run: %s\n' % (case_id, run_id))
 
         return update_flag
+    
+        def status_code(self, status):
+        if (status):
+            return 1
+
+        else:
+            return 5
+
+
+    def add_results(self, test_id, status_id, comment=None, assigned_to=None,defects=None):
+        if test_id is not None:
+            data = {}
+            data['status_id'] = status_id
+            if comment is not None:
+                data['comment'] = comment
+            if assigned_to is not None:
+                assignedto_id = self.get_user_id(assigned_to)
+                if assignedto_id is not None:
+                    data['assignedto_id'] = assignedto_id
+            if defects is not None:
+                data['defects']=defects
+            try:
+                result = self.client.send_post('add_result/%s' % (test_id), data)
+            except Exception as e:
+                print('Exception in add_result() Adding test result.')
+                print('PYTHON SAYS: ')
+                print(e)
+            else:
+                print('Added status for test_id: %s' % test_id)
+        else:
+            if test_id is None:
+                print("Cannot add result %s because Test_id %s was not found" % (status_id, test_id))
